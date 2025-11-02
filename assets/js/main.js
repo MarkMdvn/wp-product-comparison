@@ -159,6 +159,7 @@ jQuery(document).ready(function($) {
             unrenderSelectedProduct(2);
             $('#product-slot-2').hide();
             $('#comparison-table').hide();
+            $('#pc-sharp-carousel-wrapper').show(); // Show the carousel again
         }
 
         updateComparisonTable();
@@ -241,6 +242,25 @@ jQuery(document).ready(function($) {
     $('.pc-product-comparator-container').on('click', '.pc-remove-product-btn', function() {
         const slot = $(this).data('slot');
         removeProduct(slot);
+    });
+
+    // Carousel button listener
+    $('#pc-sharp-carousel-wrapper').on('click', '.pc-comparar-btn', function() {
+        const productId = $(this).data('id');
+        currentSlot = 1; // Ensure we are filling the first slot
+        selectProduct(productId);
+        $('#pc-sharp-carousel-wrapper').hide();
+    });
+
+    // Carousel navigation
+    const carousel = $('#pc-sharp-carousel');
+    const itemWidth = 220; // Assuming item width + gap
+    $('.pc-carousel-next').on('click', function() {
+        carousel.animate({ scrollLeft: '+=' + itemWidth * 2 }, 400);
+    });
+
+    $('.pc-carousel-prev').on('click', function() {
+        carousel.animate({ scrollLeft: '-=' + itemWidth * 2 }, 400);
     });
 
     $('.pc-comparator-modal-close').on('click', closeModal);

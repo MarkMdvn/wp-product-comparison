@@ -288,3 +288,101 @@
     background-color: #a00;
     transform: translateY(-2px);
 }
+
+/* Carousel Styles */
+#pc-sharp-carousel-wrapper {
+    position: relative;
+    width: 100%;
+    margin-top: 20px;
+}
+
+#pc-sharp-carousel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 200px;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scroll-behavior: smooth;
+}
+
+#pc-sharp-carousel::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.pc-carousel-item {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    scroll-snap-align: start;
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.pc-carousel-item:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+.pc-carousel-item img {
+    max-height: 120px;
+    max-width: 100%;
+    margin-bottom: 10px;
+}
+
+.pc-carousel-item h4 {
+    font-size: 14px;
+    margin: 0 0 10px 0;
+    font-weight: 500;
+}
+
+.pc-comparar-btn {
+    background-color: #0073aa;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pc-comparar-btn:hover {
+    background-color: #005a87;
+}
+
+.pc-carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pc-carousel-nav:hover {
+    background-color: #fff;
+}
+
+.pc-carousel-prev {
+    left: -20px;
+}
+
+.pc-carousel-next {
+    right: -20px;
+}

@@ -150,6 +150,19 @@ add_action( 'wp_ajax_nopriv_get_product_details', 'get_product_details_ajax_hand
  * Shortcode handler
  */
 function product_comparator_shortcode() {
+    // Fetch Sharp products for the initial carousel
+    $sharp_products = wc_get_products([
+        'status' => 'publish',
+        'limit'  => -1,
+        'tax_query' => [
+            [
+                'taxonomy' => 'product_brand',
+                'field'    => 'slug',
+                'terms'    => 'sharp',
+            ],
+        ],
+    ]);
+
     ob_start();
     ?>
     <div class="pc-product-comparator-container">
@@ -171,6 +184,21 @@ function product_comparator_shortcode() {
                     <button class="pc-add-product-btn" data-slot="2">Añadir producto</button>
                 </div>
             </div>
+        </div>
+
+        <!-- Sharp Products Carousel -->
+        <div id="pc-sharp-carousel-wrapper">
+            <div id="pc-sharp-carousel">
+                <?php foreach ( $sharp_products as $product ) : ?>
+                    <div class="pc-carousel-item">
+                        <img src="<?php echo wp_get_attachment_url( $product->get_image_id() ); ?>" alt="<?php echo $product->get_name(); ?>">
+                        <h4><?php echo $product->get_name(); ?></h4>
+                        <button class="pc-comparar-btn" data-id="<?php echo $product->get_id(); ?>">Comparar</button>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <button class="pc-carousel-nav pc-carousel-prev">&lt;</button>
+            <button class="pc-carousel-nav pc-carousel-next">&gt;</button>
         </div>
 
         <div id="comparison-table" style="display: none;">
