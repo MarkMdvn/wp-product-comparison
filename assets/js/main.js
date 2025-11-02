@@ -38,13 +38,18 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 if (response.success) {
                     renderCategories(response.data);
+                } else {
+                    console.error('Error fetching categories:', response.data);
                 }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('AJAX error fetching categories:', textStatus, errorThrown);
             }
         });
     }
 
     function fetchProducts(category = '', search = '') {
-        const brand = (currentSlot == 1) ? 'Sharp' : ''; // 'Sharp' name for slot 1
+        const brand = (currentSlot == 1) ? 'sharp' : ''; // 'sharp' slug for slot 1
 
         $.ajax({
             url: comparator_ajax_object.ajax_url,
@@ -88,7 +93,7 @@ jQuery(document).ready(function($) {
     // --- RENDERING ---
 
     function renderCategories(categories) {
-        categoryContainer.empty().append('<button class="category-filter-btn active" data-slug="">Todas</button>');
+        categoryContainer.empty().append('<button class="category-filter-btn active" data-slug="">Todos</button>');
         categories.forEach(cat => {
             categoryContainer.append(`<button class="category-filter-btn" data-slug="${cat.slug}">${cat.name}</button>`);
         });
@@ -118,6 +123,7 @@ jQuery(document).ready(function($) {
         if (!product) return;
 
         const productHtml = `
+            <button class="remove-product-btn" data-slot="${slot}">&times;</button>
             <div class="product-details">
                 <img src="${product.image || ''}" alt="${product.name}">
                 <h4>${product.name}</h4>
@@ -132,22 +138,71 @@ jQuery(document).ready(function($) {
         }
     }
 
+    function unrenderSelectedProduct(slot) {
+        const slotEl = $(`#product-slot-${slot}`);
+        const originalHtml = `
+            <div class="product-content">
+                <p>Elige un producto ${slot == 1 ? 'Sharp' : ''}</p>
+                <button class="add-product-btn">Añadir producto</button>
+            </div>
+        `;
+        slotEl.removeClass('filled').html(originalHtml);
+    }
+
+    function removeProduct(slot) {
+        selectedProducts[slot] = null;
+        unrenderSelectedProduct(slot);
+
+        // If we remove product 1, we must also remove product 2
+        if (slot == 1) {
+            selectedProducts[2] = null;
+            unrenderSelectedProduct(2);
+            $('#product-slot-2').hide();
+            $('#comparison-table').hide();
+        }
+
+        updateComparisonTable();
+    }
+
     function updateComparisonTable() {
         const tableHeader = $('#comparison-header');
         const tableBody = $('#comparison-body');
         const p1 = selectedProducts[1];
         const p2 = selectedProducts[2];
 
-        if (!p1) return;
+        if (!p1) {
+            $('#comparison-table').hide();
+            return;
+        }
 
         $('#comparison-table').show();
         tableBody.empty();
         
         // --- Headers ---
         tableHeader.html(`<th>Característica</th>`);
-        tableHeader.append(`<th>${p1.name}</th>`);
+        const p1_header = `
+            <th>
+                <div class="header-product-info">
+                    <img src="${p1.image || ''}" alt="${p1.name}">
+                    <span>${p1.name}</span>
+                </div>
+            </th>
+        `;
+        tableHeader.append(p1_header);
+
         if (p2) {
-            tableHeader.append(`<th>${p2.name}</th>`);
+            const p2_header = `
+                <th>
+                    <div class="header-product-info">
+                        <img src="${p2.image || ''}" alt="${p2.name}">
+                        <span>${p2.name}</span>
+                    </div>
+                </th>
+            `;
+            tableHeader.append(p2_header);
+        } else {
+            // Ensure the table structure is correct even with one product
+            tableHeader.find('th').eq(2).remove(); 
         }
 
         // --- Body Rows (based on product 1's attributes) ---
@@ -169,10 +224,14 @@ jQuery(document).ready(function($) {
 
     // --- EVENT LISTENERS ---
 
-    // Need to use .on() for dynamically added elements, but since this button is always there, this is fine.
     $('.product-comparator-container').on('click', '.add-product-btn', function() {
         const slot = $(this).closest('.product-slot').attr('id').split('-')[2];
         openModal(slot);
+    });
+
+    $('.product-comparator-container').on('click', '.remove-product-btn', function() {
+        const slot = $(this).data('slot');
+        removeProduct(slot);
     });
 
     $('.comparator-modal-close').on('click', closeModal);

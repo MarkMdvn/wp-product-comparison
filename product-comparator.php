@@ -53,7 +53,14 @@ add_action( 'wp_enqueue_scripts', 'product_comparator_enqueue_assets' );
  */
 function get_product_categories_ajax_handler() {
     $categories = get_terms( ['taxonomy' => 'product_cat', 'hide_empty' => true] );
-    wp_send_json_success( $categories );
+
+    if ( is_wp_error( $categories ) ) {
+        wp_send_json_error( 'WordPress Error: ' . $categories->get_error_message() );
+    } elseif ( empty( $categories ) ) {
+        wp_send_json_error( 'No product categories found.' );
+    } else {
+        wp_send_json_success( $categories );
+    }
 }
 add_action( 'wp_ajax_get_product_categories', 'get_product_categories_ajax_handler' );
 add_action( 'wp_ajax_nopriv_get_product_categories', 'get_product_categories_ajax_handler' );
