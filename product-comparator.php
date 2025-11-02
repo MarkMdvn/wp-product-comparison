@@ -138,6 +138,7 @@ function get_product_details_ajax_handler() {
         'image'      => wp_get_attachment_url( $product->get_image_id() ),
         'price'      => $product->get_price_html(),
         'attributes' => $attributes,
+        'permalink'  => $product->get_permalink(),
     ];
 
     wp_send_json_success( $product_data );
@@ -151,23 +152,23 @@ add_action( 'wp_ajax_nopriv_get_product_details', 'get_product_details_ajax_hand
 function product_comparator_shortcode() {
     ob_start();
     ?>
-    <div class="product-comparator-container">
+    <div class="pc-product-comparator-container">
         <h2>Comparador de Productos</h2>
 
         <div id="comparator-products">
             <!-- Slot 1 for Sharp Product -->
-            <div id="product-slot-1" class="product-slot">
-                <div class="product-content">
+            <div id="product-slot-1" class="pc-product-slot">
+                <div class="pc-product-content">
                     <p>Elige un producto Sharp</p>
-                    <button class="add-product-btn" data-slot="1">Añadir producto</button>
+                    <button class="pc-add-product-btn" data-slot="1">Añadir producto</button>
                 </div>
             </div>
 
             <!-- Slot 2 for Any Product -->
-            <div id="product-slot-2" class="product-slot" style="display: none;">
-                 <div class="product-content">
+            <div id="product-slot-2" class="pc-product-slot" style="display: none;">
+                 <div class="pc-product-content">
                     <p>Elige otro producto</p>
-                    <button class="add-product-btn" data-slot="2">Añadir producto</button>
+                    <button class="pc-add-product-btn" data-slot="2">Añadir producto</button>
                 </div>
             </div>
         </div>
@@ -188,9 +189,9 @@ function product_comparator_shortcode() {
     </div>
 
     <!-- The Modal -->
-    <div id="product-comparator-modal" class="comparator-modal">
-        <div class="comparator-modal-content">
-            <span class="comparator-modal-close">&times;</span>
+    <div id="product-comparator-modal" class="pc-comparator-modal">
+        <div class="pc-comparator-modal-content">
+            <span class="pc-comparator-modal-close">&times;</span>
             <h3>Elige un producto</h3>
             <div id="modal-filters">
                 <input type="text" id="modal-search-input" placeholder="Buscar productos...">

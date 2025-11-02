@@ -93,9 +93,9 @@ jQuery(document).ready(function($) {
     // --- RENDERING ---
 
     function renderCategories(categories) {
-        categoryContainer.empty().append('<button class="category-filter-btn active" data-slug="">Todos</button>');
+        categoryContainer.empty().append('<button class="pc-category-filter-btn active" data-slug="">Todos</button>');
         categories.forEach(cat => {
-            categoryContainer.append(`<button class="category-filter-btn" data-slug="${cat.slug}">${cat.name}</button>`);
+            categoryContainer.append(`<button class="pc-category-filter-btn" data-slug="${cat.slug}">${cat.name}</button>`);
         });
     }
 
@@ -107,7 +107,7 @@ jQuery(document).ready(function($) {
         }
         products.forEach(product => {
             const productEl = `
-                <div class="modal-product-item" data-id="${product.id}">
+                <div class="pc-modal-product-item" data-id="${product.id}">
                     <img src="${product.image || ''}" alt="${product.name}">
                     <p>${product.name}</p>
                 </div>
@@ -123,14 +123,14 @@ jQuery(document).ready(function($) {
         if (!product) return;
 
         const productHtml = `
-            <button class="remove-product-btn" data-slot="${slot}">&times;</button>
-            <div class="product-details">
+            <button class="pc-remove-product-btn" data-slot="${slot}">&times;</button>
+            <div class="pc-product-details">
                 <img src="${product.image || ''}" alt="${product.name}">
                 <h4>${product.name}</h4>
                 <p>${product.price}</p>
             </div>
         `;
-        slotEl.addClass('filled').find('.product-content').html(productHtml);
+        slotEl.addClass('pc-filled').find('.pc-product-content').html(productHtml);
 
         // Show next slot if first is filled
         if (slot == 1) {
@@ -141,12 +141,12 @@ jQuery(document).ready(function($) {
     function unrenderSelectedProduct(slot) {
         const slotEl = $(`#product-slot-${slot}`);
         const originalHtml = `
-            <div class="product-content">
+            <div class="pc-product-content">
                 <p>Elige un producto ${slot == 1 ? 'Sharp' : ''}</p>
-                <button class="add-product-btn">Añadir producto</button>
+                <button class="pc-add-product-btn">Añadir producto</button>
             </div>
         `;
-        slotEl.removeClass('filled').html(originalHtml);
+        slotEl.removeClass('pc-filled').html(originalHtml);
     }
 
     function removeProduct(slot) {
@@ -182,7 +182,7 @@ jQuery(document).ready(function($) {
         tableHeader.html(`<th>Característica</th>`);
         const p1_header = `
             <th>
-                <div class="header-product-info">
+                <div class="pc-header-product-info">
                     <img src="${p1.image || ''}" alt="${p1.name}">
                     <span>${p1.name}</span>
                 </div>
@@ -193,7 +193,7 @@ jQuery(document).ready(function($) {
         if (p2) {
             const p2_header = `
                 <th>
-                    <div class="header-product-info">
+                    <div class="pc-header-product-info">
                         <img src="${p2.image || ''}" alt="${p2.name}">
                         <span>${p2.name}</span>
                     </div>
@@ -219,22 +219,31 @@ jQuery(document).ready(function($) {
             `;
             tableBody.append(row);
         });
+
+        // --- Footer Row for Buttons ---
+        let footerRow = '<tr><td></td>'; // Empty cell for the attribute column
+        footerRow += `<td><a href="${p1.permalink}" target="_blank" class="pc-view-product-btn">Ver producto</a></td>`;
+        if (p2) {
+            footerRow += `<td><a href="${p2.permalink}" target="_blank" class="pc-view-product-btn">Ver producto</a></td>`;
+        }
+        footerRow += '</tr>';
+        tableBody.append(footerRow);
     }
 
 
     // --- EVENT LISTENERS ---
 
-    $('.product-comparator-container').on('click', '.add-product-btn', function() {
-        const slot = $(this).closest('.product-slot').attr('id').split('-')[2];
+    $('.pc-product-comparator-container').on('click', '.pc-add-product-btn', function() {
+        const slot = $(this).closest('.pc-product-slot').attr('id').split('-')[2];
         openModal(slot);
     });
 
-    $('.product-comparator-container').on('click', '.remove-product-btn', function() {
+    $('.pc-product-comparator-container').on('click', '.pc-remove-product-btn', function() {
         const slot = $(this).data('slot');
         removeProduct(slot);
     });
 
-    $('.comparator-modal-close').on('click', closeModal);
+    $('.pc-comparator-modal-close').on('click', closeModal);
     $(window).on('click', function(event) {
         if ($(event.target).is(modal)) {
             closeModal();
@@ -247,14 +256,14 @@ jQuery(document).ready(function($) {
         fetchProducts(category, search);
     });
 
-    categoryContainer.on('click', '.category-filter-btn', function() {
+    categoryContainer.on('click', '.pc-category-filter-btn', function() {
         $(this).addClass('active').siblings().removeClass('active');
         const category = $(this).data('slug');
         const search = searchInput.val();
         fetchProducts(category, search);
     });
 
-    productList.on('click', '.modal-product-item', function() {
+    productList.on('click', '.pc-modal-product-item', function() {
         const productId = $(this).data('id');
         selectProduct(productId);
     });
