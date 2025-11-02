@@ -86,9 +86,37 @@ jQuery(document).ready(function($) {
                     renderSelectedProduct(currentSlot);
                     updateComparisonTable();
                     closeModal();
+
+                    // If the first product was just selected, hide the carousel
+                    if (currentSlot == 1) {
+                        $('#pc-sharp-carousel-wrapper').hide();
+                    }
                 }
             }
         });
+    }
+
+    // --- CAROUSEL UX ---
+    const carousel = $('#pc-sharp-carousel');
+
+    function updateCarouselNav() {
+        const scrollLeft = carousel.scrollLeft();
+        const scrollWidth = carousel[0].scrollWidth;
+        const width = carousel.width();
+
+        // Previous button
+        if (scrollLeft > 0) {
+            $('.pc-carousel-prev').removeClass('disabled');
+        } else {
+            $('.pc-carousel-prev').addClass('disabled');
+        }
+
+        // Next button
+        if (scrollLeft + width < scrollWidth - 1) { // -1 for pixel rounding errors
+            $('.pc-carousel-next').removeClass('disabled');
+        } else {
+            $('.pc-carousel-next').addClass('disabled');
+        }
     }
 
     // --- RENDERING ---
@@ -248,25 +276,31 @@ jQuery(document).ready(function($) {
         removeProduct(slot);
     });
 
-    // Carousel button listener
+    // --- Carousel Listeners ---
     $('#pc-sharp-carousel-wrapper').on('click', '.pc-comparar-btn', function() {
         const productId = $(this).data('id');
         currentSlot = 1; // Ensure we are filling the first slot
         selectProduct(productId);
-        $('#pc-sharp-carousel-wrapper').hide();
     });
 
-    // Carousel navigation
-    const carousel = $('#pc-sharp-carousel');
     const itemWidth = 220; // Assuming item width + gap
     $('.pc-carousel-next').on('click', function() {
-        carousel.animate({ scrollLeft: '+=' + itemWidth * 2 }, 400);
+        if (!$(this).hasClass('disabled')) {
+            carousel.animate({ scrollLeft: '+=' + itemWidth * 2 }, 400);
+        }
     });
 
     $('.pc-carousel-prev').on('click', function() {
-        carousel.animate({ scrollLeft: '-=' + itemWidth * 2 }, 400);
+        if (!$(this).hasClass('disabled')) {
+            carousel.animate({ scrollLeft: '-=' + itemWidth * 2 }, 400);
+        }
     });
 
+    carousel.on('scroll', function() {
+        updateCarouselNav();
+    });
+
+    // --- Modal Listeners ---
     $('.pc-comparator-modal-close').on('click', closeModal);
     $(window).on('click', function(event) {
         if ($(event.target).is(modal)) {
@@ -292,4 +326,6 @@ jQuery(document).ready(function($) {
         selectProduct(productId);
     });
 
+    // Initial setup
+    updateCarouselNav();
 });

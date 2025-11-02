@@ -394,3 +394,9 @@
 .pc-carousel-next {
     right: -20px;
 }
+
+.pc-carousel-nav.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
