@@ -6,6 +6,7 @@ jQuery(document).ready(function($) {
     let selectedProducts = {
         1: null,
         2: null,
+        3: null,
     };
 
     // --- DOM ELEMENTS ---
@@ -132,34 +133,51 @@ jQuery(document).ready(function($) {
         `;
         slotEl.addClass('pc-filled').find('.pc-product-content').html(productHtml);
 
-        // Show next slot if first is filled
-        if (slot == 1) {
-            $('#product-slot-2').show();
+        // Show the next empty slot if it exists
+        const nextSlot = parseInt(slot) + 1;
+        if (nextSlot <= 3) {
+             $(`#product-slot-${nextSlot}`).show();
         }
     }
 
     function unrenderSelectedProduct(slot) {
         const slotEl = $(`#product-slot-${slot}`);
+        const slotLabel = slot == 1 ? 'un producto Sharp' : 'otro producto';
         const originalHtml = `
             <div class="pc-product-content">
-                <p>Elige un producto ${slot == 1 ? 'Sharp' : ''}</p>
+                <p>Elige ${slotLabel}</p>
                 <button class="pc-add-product-btn">Añadir producto</button>
             </div>
         `;
         slotEl.removeClass('pc-filled').html(originalHtml);
     }
 
-    function removeProduct(slot) {
-        selectedProducts[slot] = null;
-        unrenderSelectedProduct(slot);
+    function removeProduct(slotToRemove) {
+        // When a product is removed, clear it and all subsequent products
+        for (let i = slotToRemove; i <= 3; i++) {
+            if (selectedProducts[i]) {
+                selectedProducts[i] = null;
+                unrenderSelectedProduct(i);
+                // Hide the slot unless it's the one immediately after the last filled one
+                if (i > 1 && !selectedProducts[i-1]) {
+                     $(`#product-slot-${i}`).hide();
+                }
+            }
+        }
 
-        // If we remove product 1, we must also remove product 2
-        if (slot == 1) {
-            selectedProducts[2] = null;
-            unrenderSelectedProduct(2);
-            $('#product-slot-2').hide();
-            $('#comparison-table').hide();
+        // Special handling for slot 1 removal
+        if (slotToRemove == 1) {
             $('#pc-sharp-carousel-wrapper').show(); // Show the carousel again
+            for (let i = 2; i <= 3; i++) {
+                 $(`#product-slot-${i}`).hide();
+            }
+        }
+        
+        // Ensure the next empty slot is visible
+        const activeProducts = Object.values(selectedProducts).filter(p => p !== null);
+        const nextEmptySlot = activeProducts.length + 1;
+        if (nextEmptySlot <= 3) {
+            $(`#product-slot-${nextEmptySlot}`).show();
         }
 
         updateComparisonTable();
@@ -169,9 +187,10 @@ jQuery(document).ready(function($) {
         const tableHeader = $('#comparison-header');
         const tableBody = $('#comparison-body');
         const p1 = selectedProducts[1];
-        const p2 = selectedProducts[2];
 
-        if (!p1) {
+        const activeProducts = Object.values(selectedProducts).filter(p => p !== null);
+
+        if (activeProducts.length === 0) {
             $('#comparison-table').hide();
             return;
         }
@@ -181,54 +200,39 @@ jQuery(document).ready(function($) {
         
         // --- Headers ---
         tableHeader.html(`<th>Característica</th>`);
-        const p1_header = `
-            <th>
-                <div class="pc-header-product-info">
-                    <img src="${p1.image || ''}" alt="${p1.name}">
-                    <span>${p1.name}</span>
-                </div>
-            </th>
-        `;
-        tableHeader.append(p1_header);
-
-        if (p2) {
-            const p2_header = `
+        activeProducts.forEach(product => {
+            const header_html = `
                 <th>
                     <div class="pc-header-product-info">
-                        <img src="${p2.image || ''}" alt="${p2.name}">
-                        <span>${p2.name}</span>
+                        <img src="${product.image || ''}" alt="${product.name}">
+                        <span>${product.name}</span>
                     </div>
                 </th>
             `;
-            tableHeader.append(p2_header);
-        } else {
-            // Ensure the table structure is correct even with one product
-            tableHeader.find('th').eq(2).remove(); 
-        }
-
-        // --- Body Rows (based on product 1's attributes) ---
-        p1.attributes.forEach(attr => {
-            const p2_attr = p2 ? p2.attributes.find(a => a.name === attr.name) : null;
-            const p2_value = p2_attr ? p2_attr.value : '-';
-            
-            const row = `
-                <tr>
-                    <td><strong>${attr.name}</strong></td>
-                    <td>${attr.value}</td>
-                    ${p2 ? `<td>${p2_value}</td>` : ''}
-                </tr>
-            `;
-            tableBody.append(row);
+            tableHeader.append(header_html);
         });
 
-        // --- Footer Row for Buttons ---
-        let footerRow = '<tr><td></td>'; // Empty cell for the attribute column
-        footerRow += `<td><a href="${p1.permalink}" target="_blank" class="pc-view-product-btn">Ver producto</a></td>`;
-        if (p2) {
-            footerRow += `<td><a href="${p2.permalink}" target="_blank" class="pc-view-product-btn">Ver producto</a></td>`;
+        // --- Body Rows (based on product 1's attributes) ---
+        if (p1) {
+            p1.attributes.forEach(attr => {
+                let row = `<tr><td><strong>${attr.name}</strong></td>`;
+                activeProducts.forEach(product => {
+                    const matchingAttr = product.attributes.find(a => a.name === attr.name);
+                    const attrValue = matchingAttr ? matchingAttr.value : '-';
+                    row += `<td>${attrValue}</td>`;
+                });
+                row += '</tr>';
+                tableBody.append(row);
+            });
+
+            // --- Footer Row for Buttons ---
+            let footerRow = '<tr><td></td>';
+            activeProducts.forEach(product => {
+                 footerRow += `<td><a href="${product.permalink}" target="_blank" class="pc-view-product-btn">Ver producto</a></td>`;
+            });
+            footerRow += '</tr>';
+            tableBody.append(footerRow);
         }
-        footerRow += '</tr>';
-        tableBody.append(footerRow);
     }
 
 

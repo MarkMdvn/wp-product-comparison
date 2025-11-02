@@ -184,6 +184,16 @@ function product_comparator_shortcode() {
                     <button class="pc-add-product-btn" data-slot="2">Añadir producto</button>
                 </div>
             </div>
+
+            <!-- Slot 3 for Any Product -->
+            <div id="product-slot-3" class="pc-product-slot" style="display: none;">
+                 <div class="pc-product-content">
+                    <p>Elige otro producto</p>
+                    <button class="pc-add-product-btn" data-slot="3">Añadir producto</button>
+                </div>
+            </div>
+
+
         </div>
 
         <!-- Sharp Products Carousel -->
@@ -193,7 +203,7 @@ function product_comparator_shortcode() {
                     <div class="pc-carousel-item">
                         <img src="<?php echo wp_get_attachment_url( $product->get_image_id() ); ?>" alt="<?php echo $product->get_name(); ?>">
                         <h4><?php echo $product->get_name(); ?></h4>
-                        <button class="pc-comparar-btn" data-id="<?php echo $product->get_id(); ?>">Comparar</button>
+                        <div class="pc-comparar-btn" data-id="<?php echo $product->get_id(); ?>">+</div>
                     </div>
                 <?php endforeach; ?>
             </div>
