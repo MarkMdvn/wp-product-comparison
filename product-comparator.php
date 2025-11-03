@@ -52,11 +52,13 @@ add_action( 'wp_enqueue_scripts', 'product_comparator_enqueue_assets' );
  * AJAX handler for getting product categories.
  */
 function get_product_categories_ajax_handler() {
-    $categories = get_terms( ['taxonomy' => 'product_cat', 'hide_empty' => true] );
+    $categories = get_terms( ['taxonomy' => 'product_cat', 'hide_empty' => false] );
 
     if ( is_wp_error( $categories ) ) {
+        error_log( 'WordPress Error fetching categories: ' . $categories->get_error_message() );
         wp_send_json_error( 'WordPress Error: ' . $categories->get_error_message() );
     } elseif ( empty( $categories ) ) {
+        error_log( 'No product categories found.' );
         wp_send_json_error( 'No product categories found.' );
     } else {
         wp_send_json_success( $categories );
@@ -64,6 +66,21 @@ function get_product_categories_ajax_handler() {
 }
 add_action( 'wp_ajax_get_product_categories', 'get_product_categories_ajax_handler' );
 add_action( 'wp_ajax_nopriv_get_product_categories', 'get_product_categories_ajax_handler' );
+
+/**
+ * AJAX handler for getting product brands.
+ */
+function get_product_brands_ajax_handler() {
+    $brands = get_terms( ['taxonomy' => 'product_brand', 'hide_empty' => false] );
+
+    if ( is_wp_error( $brands ) ) {
+        wp_send_json_error( 'WordPress Error: ' . $brands->get_error_message() );
+    } else {
+        wp_send_json_success( $brands );
+    }
+}
+add_action( 'wp_ajax_get_product_brands', 'get_product_brands_ajax_handler' );
+add_action( 'wp_ajax_nopriv_get_product_brands', 'get_product_brands_ajax_handler' );
 
 /**
  * AJAX handler for getting products.
@@ -139,6 +156,7 @@ function get_product_details_ajax_handler() {
         'price'      => $product->get_price_html(),
         'attributes' => $attributes,
         'permalink'  => $product->get_permalink(),
+        'description'=> $product->get_description(),
     ];
 
     wp_send_json_success( $product_data );
@@ -233,12 +251,22 @@ function product_comparator_shortcode() {
             <h3>Elige un producto</h3>
             <div id="modal-filters">
                 <input type="text" id="modal-search-input" placeholder="Buscar productos...">
-                <div id="modal-categories">
-                    <!-- Category buttons will be loaded here -->
+                <div id="modal-selectors">
+                    <select id="modal-category-selector"></select>
+                    <select id="modal-brand-selector"></select>
                 </div>
             </div>
             <div id="modal-product-list">
                 <!-- Products will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+
+    <div id="product-description-modal" class="pc-comparator-modal">
+        <div class="pc-comparator-modal-content">
+            <span class="pc-comparator-modal-close">&times;</span>
+            <div id="modal-product-description">
+                <!-- Product description will be loaded here -->
             </div>
         </div>
     </div>

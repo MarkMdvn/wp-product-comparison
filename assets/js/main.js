@@ -11,8 +11,10 @@ jQuery(document).ready(function($) {
 
     // --- DOM ELEMENTS ---
     const modal = $('#product-comparator-modal');
+    const descriptionModal = $('#product-description-modal');
     const productList = $('#modal-product-list');
-    const categoryContainer = $('#modal-categories');
+    const categorySelector = $('#modal-category-selector');
+    const brandSelector = $('#modal-brand-selector');
     const searchInput = $('#modal-search-input');
 
     // --- MODAL & DATA FETCHING ---
@@ -21,14 +23,26 @@ jQuery(document).ready(function($) {
         currentSlot = slot;
         modal.show();
         fetchCategories();
+        fetchBrands();
         fetchProducts();
     }
 
     function closeModal() {
         modal.hide();
         productList.empty();
-        categoryContainer.empty();
+        categorySelector.empty();
+        brandSelector.empty();
         searchInput.val('');
+    }
+
+    function openDescriptionModal(description) {
+        const modalContent = descriptionModal.find('#modal-product-description');
+        modalContent.html(description);
+        descriptionModal.show();
+    }
+
+    function closeDescriptionModal() {
+        descriptionModal.hide();
     }
 
     function fetchCategories() {
@@ -49,15 +63,33 @@ jQuery(document).ready(function($) {
         });
     }
 
-    function fetchProducts(category = '', search = '') {
-        const brand = (currentSlot == 1) ? 'sharp' : ''; // 'sharp' slug for slot 1
+    function fetchBrands() {
+        $.ajax({
+            url: comparator_ajax_object.ajax_url,
+            type: 'POST',
+            data: { action: 'get_product_brands' },
+            success: function(response) {
+                if (response.success) {
+                    renderBrands(response.data);
+                } else {
+                    console.error('Error fetching brands:', response.data);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('AJAX error fetching brands:', textStatus, errorThrown);
+            }
+        });
+    }
+
+    function fetchProducts(category = '', search = '', brand = '') {
+        const fetchBrand = (currentSlot == 1) ? 'sharp' : brand;
 
         $.ajax({
             url: comparator_ajax_object.ajax_url,
             type: 'POST',
             data: {
                 action: 'get_products',
-                brand: brand,
+                brand: fetchBrand,
                 category: category,
                 search: search
             },
@@ -122,9 +154,16 @@ jQuery(document).ready(function($) {
     // --- RENDERING ---
 
     function renderCategories(categories) {
-        categoryContainer.empty().append('<button class="pc-category-filter-btn active" data-slug="">Todos</button>');
+        categorySelector.empty().append('<option value="">Todas las categorías</option>');
         categories.forEach(cat => {
-            categoryContainer.append(`<button class="pc-category-filter-btn" data-slug="${cat.slug}">${cat.name}</button>`);
+            categorySelector.append(`<option value="${cat.slug}">${cat.name}</option>`);
+        });
+    }
+
+    function renderBrands(brands) {
+        brandSelector.empty().append('<option value="">Todas las marcas</option>');
+        brands.forEach(brand => {
+            brandSelector.append(`<option value="${brand.slug}">${brand.name}</option>`);
         });
     }
 
@@ -157,6 +196,7 @@ jQuery(document).ready(function($) {
                 <img src="${product.image || ''}" alt="${product.name}">
                 <h4>${product.name}</h4>
                 <p>${product.price}</p>
+                <button class="pc-know-more-btn" data-slot="${slot}">Saber más</button>
             </div>
         `;
         slotEl.addClass('pc-filled').find('.pc-product-content').html(productHtml);
@@ -300,7 +340,22 @@ jQuery(document).ready(function($) {
         updateCarouselNav();
     });
 
+    $('.pc-product-comparator-container').on('click', '.pc-know-more-btn', function() {
+        const slot = $(this).data('slot');
+        const product = selectedProducts[slot];
+        if (product && product.description) {
+            openDescriptionModal(product.description);
+        }
+    });
+
     // --- Modal Listeners ---
+    $('#product-description-modal .pc-comparator-modal-close').on('click', closeDescriptionModal);
+    $(window).on('click', function(event) {
+        if ($(event.target).is(descriptionModal)) {
+            closeDescriptionModal();
+        }
+    });
+
     $('.pc-comparator-modal-close').on('click', closeModal);
     $(window).on('click', function(event) {
         if ($(event.target).is(modal)) {
@@ -310,15 +365,23 @@ jQuery(document).ready(function($) {
 
     searchInput.on('keyup', function() {
         const search = $(this).val();
-        const category = categoryContainer.find('.active').data('slug') || '';
-        fetchProducts(category, search);
+        const category = categorySelector.val() || '';
+        const brand = brandSelector.val() || '';
+        fetchProducts(category, search, brand);
     });
 
-    categoryContainer.on('click', '.pc-category-filter-btn', function() {
-        $(this).addClass('active').siblings().removeClass('active');
-        const category = $(this).data('slug');
+    categorySelector.on('change', function() {
+        const category = $(this).val();
         const search = searchInput.val();
-        fetchProducts(category, search);
+        const brand = brandSelector.val() || '';
+        fetchProducts(category, search, brand);
+    });
+
+    brandSelector.on('change', function() {
+        const brand = $(this).val();
+        const category = categorySelector.val() || '';
+        const search = searchInput.val();
+        fetchProducts(category, search, brand);
     });
 
     productList.on('click', '.pc-modal-product-item', function() {

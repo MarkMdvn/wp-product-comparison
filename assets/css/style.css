@@ -47,13 +47,14 @@
 
 .pc-product-slot:not(.pc-filled) .pc-add-product-btn {
     border: none;
-    background: #0073aa;
+    background: #8B0000;
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     margin-top: 20px;
+    font-weight: bold;
 }
 
 .pc-product-slot:not(.pc-filled) .pc-product-content p {
@@ -65,7 +66,7 @@
     content: '+';
     display: block;
     font-size: 48px;
-    color: #0073aa;
+    color: #8B0000;
     margin-bottom: 10px;
 }
 
@@ -240,9 +241,9 @@
 }
 
 #modal-categories button.active, #modal-categories button:hover {
-    background-color: #0073aa;
+    background-color: #8B0000;
     color: white;
-    border-color: #0073aa;
+    border-color: #8B0000;
 }
 
 #modal-product-list {
@@ -346,23 +347,24 @@
 }
 
 .pc-comparar-btn {
-    background-color: #0073aa;
+    background-color: #8B0000;
     color: #fff;
     border: none;
     border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    font-size: 24px;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
     font-weight: bold;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s, transform 0.2s;
+    transform: translateY(-10px);
 }
 
 .pc-comparar-btn:hover {
-    background-color: #005a87;
+    background-color: #6A0000;
     transform: scale(1.1);
 }
 
@@ -399,4 +401,46 @@
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+.pc-know-more-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    padding: 5px 10px;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: bold;
+}
+
+.pc-know-more-btn:hover {
+    background-color: #8B0000;
+    color: white;
+}
+
+#product-description-modal .pc-comparator-modal-content {
+    max-width: 600px;
+}
+
+#modal-product-description {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#modal-selectors {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+#modal-selectors select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 14px;
 }
