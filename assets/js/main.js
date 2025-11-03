@@ -227,7 +227,7 @@ jQuery(document).ready(function($) {
         tableBody.empty();
         
         // --- Headers ---
-        tableHeader.html(`<th>Característica</th>`);
+        tableHeader.html(`<th><img src="https://comparador-sharp.epoint.es/wp-content/uploads/2025/10/cropped-cropped-Sharp-logo-e1761660317500.png" alt="Sharp Logo" style="max-width: 100px;"></th>`);
         activeProducts.forEach(product => {
             const header_html = `
                 <th>
