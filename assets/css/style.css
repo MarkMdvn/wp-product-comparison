@@ -4,7 +4,7 @@
     --dark-gray: #333;
     --mid-gray: #6c757d;
     --light-gray: #f8f9fa;
-    --border-color: #dee2e6;
+    --border-color: #ced4da;
     --white: #fff;
     --shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
     --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.1);
@@ -71,8 +71,7 @@
 /* Instructions Block Styles */
 #pc-instructions-block {
     display: none; /* Hidden by default, shown by the rule above */
-    background-color: var(--white);
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius) !important;
     padding: 30px 35px;
     border: 1px solid var(--border-color);
     height: 100%;
@@ -131,7 +130,7 @@
 
 .pc-product-slot {
     border: 2px dashed var(--border-color);
-    border-radius: var(--border-radius);
+    border-radius: 25px !important;
     padding: 20px;
     text-align: center;
     width: 280px;
@@ -366,8 +365,8 @@
     background-color: var(--white);
     margin: 5% auto; 
     padding: 30px;
-    border: none;
-    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color) !important;
+    border-radius: 16px !important;
     width: 90%; 
     max-width: 900px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.2);
@@ -386,13 +385,18 @@
     color: var(--dark-gray);
 }
 
+.pc-comparator-modal-content h3 {
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
 #modal-search-input, #modal-selectors select {
     width: 100%;
     box-sizing: border-box;
     padding: 14px;
     margin-bottom: 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 1px solid #ced4da !important;
+    border-radius: 8px !important;
     font-size: 1rem;
 }
 #modal-selectors {
@@ -411,8 +415,8 @@
 }
 
 .pc-modal-product-item {
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--border-radius) !important;
     padding: 15px;
     text-align: center;
     cursor: pointer;
@@ -462,6 +466,7 @@
 .pc-category-pill:hover {
     background-color: var(--light-gray);
     border-color: var(--mid-gray);
+    color: var(--dark-gray);
 }
 
 .pc-category-pill.active {
@@ -480,7 +485,10 @@
 }
 
 #pc-sharp-carousel {
-    display: flex;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(3, 1fr);
+    grid-auto-columns: 220px;
     gap: 20px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -495,7 +503,6 @@
 }
 
 .pc-carousel-item {
-    flex: 0 0 220px;
     border: 1px solid var(--border-color);
     border-radius: 20px;
     padding: 20px;
@@ -562,6 +569,7 @@
     justify-content: center;
     box-shadow: var(--shadow);
     transition: all var(--transition-speed) ease;
+    color: var(--dark-gray);
 }
 
 .pc-carousel-nav:hover {
@@ -571,11 +579,11 @@
 }
 
 .pc-carousel-prev {
-    left: 0;
+    left: -20px;
 }
 
 .pc-carousel-next {
-    right: 0;
+    right: -20px;
 }
 
 .pc-carousel-nav.disabled {
