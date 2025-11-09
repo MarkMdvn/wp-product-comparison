@@ -181,6 +181,9 @@ function product_comparator_shortcode() {
         ],
     ]);
 
+    // Fetch product categories for the filter pills
+    $product_categories = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => true]);
+
     ob_start();
     ?>
     <div class="pc-product-comparator-container">
@@ -216,9 +219,25 @@ function product_comparator_shortcode() {
 
         <!-- Sharp Products Carousel -->
         <div id="pc-sharp-carousel-wrapper">
+            <!-- Category Pills -->
+            <div class="pc-category-pills-container">
+                <button class="pc-category-pill active" data-category-slug="all">Todos</button>
+                <?php if (!is_wp_error($product_categories) && !empty($product_categories)) : ?>
+                    <?php foreach ($product_categories as $category) : ?>
+                        <button class="pc-category-pill" data-category-slug="<?php echo esc_attr($category->slug); ?>">
+                            <?php echo esc_html($category->name); ?>
+                        </button>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+
             <div id="pc-sharp-carousel">
                 <?php foreach ( $sharp_products as $product ) : ?>
-                    <div class="pc-carousel-item">
+                    <?php
+                        $category_slugs = wp_get_post_terms($product->get_id(), 'product_cat', ['fields' => 'slugs']);
+                        $categories_string = implode(' ', $category_slugs);
+                    ?>
+                    <div class="pc-carousel-item" data-categories="<?php echo esc_attr($categories_string); ?>">
                         <img src="<?php echo wp_get_attachment_url( $product->get_image_id() ); ?>" alt="<?php echo $product->get_name(); ?>">
                         <h4><?php echo $product->get_name(); ?></h4>
                         <div class="pc-comparar-btn" data-id="<?php echo $product->get_id(); ?>">+</div>

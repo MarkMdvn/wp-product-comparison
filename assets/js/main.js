@@ -16,6 +16,7 @@ jQuery(document).ready(function($) {
     const categorySelector = $('#modal-category-selector');
     const brandSelector = $('#modal-brand-selector');
     const searchInput = $('#modal-search-input');
+    const carouselWrapper = $('#pc-sharp-carousel-wrapper');
 
     // --- MODAL & DATA FETCHING ---
 
@@ -338,6 +339,32 @@ jQuery(document).ready(function($) {
 
     carousel.on('scroll', function() {
         updateCarouselNav();
+    });
+
+    // --- Category Pill Filtering ---
+    carouselWrapper.on('click', '.pc-category-pill', function(e) {
+        e.preventDefault();
+        const categorySlug = $(this).data('category-slug');
+
+        // Update active pill
+        carouselWrapper.find('.pc-category-pill').removeClass('active');
+        $(this).addClass('active');
+
+        // Filter items
+        const carouselItems = carousel.find('.pc-carousel-item');
+        if (categorySlug === 'all') {
+            carouselItems.fadeIn(200);
+        } else {
+            carouselItems.hide();
+            carouselItems.filter(`[data-categories~="${categorySlug}"]`).fadeIn(200);
+        }
+
+        // Reset scroll and update nav arrows
+        carousel.scrollLeft(0);
+        // Use a timeout to wait for the fade-in to complete before updating nav
+        setTimeout(function() {
+            updateCarouselNav();
+        }, 250);
     });
 
     $('.pc-product-comparator-container').on('click', '.pc-know-more-btn', function() {

@@ -344,6 +344,38 @@
     font-size: 0.9rem;
 }
 
+
+/* --- CATEGORY PILLS --- */
+.pc-category-pills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.pc-category-pill {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.pc-category-pill:hover {
+    background-color: var(--light-gray);
+    border-color: var(--mid-gray);
+}
+
+.pc-category-pill.active {
+    background-color: var(--sharp-red);
+    color: var(--white);
+    border-color: var(--sharp-red);
+}
+
 /* --- CAROUSEL --- */
 #pc-sharp-carousel-wrapper {
     position: relative;
@@ -371,7 +403,7 @@
 .pc-carousel-item {
     flex: 0 0 220px;
     border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
+    border-radius: 20px;
     padding: 20px;
     background-color: var(--white);
     display: flex;
