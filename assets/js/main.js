@@ -348,6 +348,9 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         const categorySlug = $(this).data('category-slug');
 
+        // Show the carousel on first interaction
+        $('#pc-sharp-carousel, .pc-carousel-nav').fadeIn(200);
+
         // Update active pill
         carouselWrapper.find('.pc-category-pill').removeClass('active');
         $(this).addClass('active');

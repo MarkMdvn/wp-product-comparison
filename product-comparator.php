@@ -201,7 +201,12 @@ function product_comparator_shortcode() {
     ob_start();
     ?>
     <div class="pc-product-comparator-container">
-        <h2>Comparador de Productos</h2>
+        <div class="pc-comparator-header">
+            <h2>Comparador de Productos</h2>
+            <p class="pc-comparator-description">
+                Selecciona un producto Sharp para iniciar. Luego, elige otros productos para ver una comparación detallada de sus características.
+            </p>
+        </div>
 
         <div id="comparator-products">
             <div id="pc-initial-step">
@@ -218,11 +223,11 @@ function product_comparator_shortcode() {
                     <ul>
                         <li>
                             <span class="pc-step-number">1</span>
-                            <p><strong>Elige un producto.</strong> Haz clic en "Añadir producto" o selecciona un equipo Sharp del carrusel inferior para empezar.</p>
+                            <p><strong>Elige un producto.</strong> Haz clic en "Añadir producto" para abrir el selector y encontrar un equipo Sharp.</p>
                         </li>
                         <li>
                             <span class="pc-step-number">2</span>
-                            <p><strong>Compara.</strong> Añade hasta dos productos más para ver sus características y especificaciones lado a lado.</p>
+                            <p><strong>Compara.</strong> Una vez seleccionado el primer equipo, aparecerá un nuevo espacio para que añadas otro producto y compares sus características.</p>
                         </li>
                         <li>
                             <span class="pc-step-number">3</span>
@@ -263,7 +268,7 @@ function product_comparator_shortcode() {
                 <?php endif; ?>
             </div>
 
-            <div id="pc-sharp-carousel">
+            <div id="pc-sharp-carousel" style="display: none;">
                 <?php foreach ( $sharp_products as $product ) : ?>
                     <?php
                         $category_slugs = wp_get_post_terms($product->get_id(), 'product_cat', ['fields' => 'slugs']);
@@ -276,8 +281,8 @@ function product_comparator_shortcode() {
                     </div>
                 <?php endforeach; ?>
             </div>
-            <button class="pc-carousel-nav pc-carousel-prev"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
-            <button class="pc-carousel-nav pc-carousel-next"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+            <button class="pc-carousel-nav pc-carousel-prev" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+            <button class="pc-carousel-nav pc-carousel-next" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
         </div>
 
         <div id="comparison-table" style="display: none;">
