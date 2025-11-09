@@ -255,12 +255,11 @@
 
 /* --- COMPARISON TABLE --- */
 #comparison-table {
-    background: var(--white);
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius) !important;
     box-shadow: var(--shadow);
-    padding: 30px;
     margin-top: 40px;
-    overflow-x: auto;
+    overflow: hidden; /* This is key to contain the table corners */
+    border: 1px solid var(--border-color);
 }
 
 #comparison-table table {
@@ -269,21 +268,22 @@
 }
 
 #comparison-table th, #comparison-table td {
-    padding: 18px;
+    padding: 16px 20px;
     text-align: center;
     vertical-align: middle;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid #e9ecef; /* Lighter border for rows */
 }
 
-#comparison-table tr:last-child td {
+#comparison-table tbody tr:last-child th,
+#comparison-table tbody tr:last-child td {
     border-bottom: none;
 }
 
 #comparison-table th {
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--mid-gray);
-    text-transform: uppercase;
+    color: var(--dark-gray);
+    background-color: var(--light-gray);
     letter-spacing: 0.5px;
 }
 
@@ -293,8 +293,9 @@
     color: var(--dark-gray);
 }
 
+/* Remove the old zebra striping */
 #comparison-table tbody tr:nth-child(even) {
-    background-color: var(--light-gray);
+    background-color: transparent;
 }
 
 .pc-header-product-info {
