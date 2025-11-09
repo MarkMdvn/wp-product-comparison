@@ -346,30 +346,34 @@ jQuery(document).ready(function($) {
     // --- Category Pill Filtering ---
     carouselWrapper.on('click', '.pc-category-pill', function(e) {
         e.preventDefault();
-        const categorySlug = $(this).data('category-slug');
-
-        // Show the carousel on first interaction
-        $('#pc-sharp-carousel, .pc-carousel-nav').fadeIn(200);
-
-        // Update active pill
-        carouselWrapper.find('.pc-category-pill').removeClass('active');
-        $(this).addClass('active');
-
-        // Filter items
+        const $this = $(this);
+        const categorySlug = $this.data('category-slug');
         const carouselItems = carousel.find('.pc-carousel-item');
-        if (categorySlug === 'all') {
-            carouselItems.fadeIn(200);
-        } else {
-            carouselItems.hide();
-            carouselItems.filter(`[data-categories~="${categorySlug}"]`).fadeIn(200);
-        }
 
-        // Reset scroll and update nav arrows
-        carousel.scrollLeft(0);
-        // Use a timeout to wait for the fade-in to complete before updating nav
-        setTimeout(function() {
-            updateCarouselNav();
-        }, 250);
+        // If the clicked pill is already active, deactivate it
+        if ($this.hasClass('active')) {
+            $this.removeClass('active');
+            $('#pc-sharp-carousel, .pc-carousel-nav').fadeOut(200);
+        } else {
+            // Otherwise, activate the clicked pill
+            $('#pc-sharp-carousel, .pc-carousel-nav').fadeIn(200);
+            carouselWrapper.find('.pc-category-pill').removeClass('active');
+            $this.addClass('active');
+
+            // Filter items
+            if (categorySlug === 'all') {
+                carouselItems.fadeIn(200);
+            } else {
+                carouselItems.hide();
+                carouselItems.filter(`[data-categories~="${categorySlug}"]`).fadeIn(200);
+            }
+
+            // Reset scroll and update nav arrows
+            carousel.scrollLeft(0);
+            setTimeout(function() {
+                updateCarouselNav();
+            }, 250);
+        }
     });
 
     $('.pc-product-comparator-container').on('click', '.pc-know-more-btn', function() {

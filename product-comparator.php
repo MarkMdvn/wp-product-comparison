@@ -258,7 +258,7 @@ function product_comparator_shortcode() {
         <div id="pc-sharp-carousel-wrapper">
             <!-- Category Pills -->
             <div class="pc-category-pills-container">
-                <button class="pc-category-pill active" data-category-slug="all">Todos</button>
+                <button class="pc-category-pill" data-category-slug="all">Todos</button>
                 <?php if (!is_wp_error($product_categories) && !empty($product_categories)) : ?>
                     <?php foreach ($product_categories as $category) : ?>
                         <button class="pc-category-pill" data-category-slug="<?php echo esc_attr($category->slug); ?>">
