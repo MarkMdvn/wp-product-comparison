@@ -323,16 +323,16 @@ jQuery(document).ready(function($) {
         selectProduct(productId);
     });
 
-    const itemWidth = 220; // Assuming item width + gap
+    const scrollAmount = carousel.width() * 0.8; // Scroll by 80% of the container width
     $('.pc-carousel-next').on('click', function() {
         if (!$(this).hasClass('disabled')) {
-            carousel.animate({ scrollLeft: '+=' + itemWidth * 2 }, 400);
+            carousel.animate({ scrollLeft: '+=' + scrollAmount }, 400);
         }
     });
 
     $('.pc-carousel-prev').on('click', function() {
         if (!$(this).hasClass('disabled')) {
-            carousel.animate({ scrollLeft: '-=' + itemWidth * 2 }, 400);
+            carousel.animate({ scrollLeft: '-=' + scrollAmount }, 400);
         }
     });
 
