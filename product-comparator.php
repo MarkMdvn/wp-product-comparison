@@ -190,11 +190,31 @@ function product_comparator_shortcode() {
         <h2>Comparador de Productos</h2>
 
         <div id="comparator-products">
-            <!-- Slot 1 for Sharp Product -->
-            <div id="product-slot-1" class="pc-product-slot">
-                <div class="pc-product-content">
-                    <p>Elige un producto Sharp</p>
-                    <button class="pc-add-product-btn" data-slot="1">Añadir producto</button>
+            <div id="pc-initial-step">
+                <!-- Slot 1 for Sharp Product -->
+                <div id="product-slot-1" class="pc-product-slot">
+                    <div class="pc-product-content">
+                        <p>Elige un producto Sharp</p>
+                        <button class="pc-add-product-btn" data-slot="1">Añadir producto</button>
+                    </div>
+                </div>
+
+                <div id="pc-instructions-block" class="pc-instructions">
+                    <h3>¿Cómo funciona?</h3>
+                    <ul>
+                        <li>
+                            <span class="pc-step-number">1</span>
+                            <p><strong>Elige un producto.</strong> Haz clic en "Añadir producto" o selecciona un equipo Sharp del carrusel inferior para empezar.</p>
+                        </li>
+                        <li>
+                            <span class="pc-step-number">2</span>
+                            <p><strong>Compara.</strong> Añade hasta dos productos más para ver sus características y especificaciones lado a lado.</p>
+                        </li>
+                        <li>
+                            <span class="pc-step-number">3</span>
+                            <p><strong>Decide.</strong> ¿Lo tienes claro? Pulsa en "Ver producto" para ir a su página y finalizar tu compra.</p>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
@@ -213,8 +233,6 @@ function product_comparator_shortcode() {
                     <button class="pc-add-product-btn" data-slot="3">Añadir producto</button>
                 </div>
             </div>
-
-
         </div>
 
         <!-- Sharp Products Carousel -->

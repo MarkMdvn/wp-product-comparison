@@ -120,9 +120,10 @@ jQuery(document).ready(function($) {
                     updateComparisonTable();
                     closeModal();
 
-                    // If the first product was just selected, hide the carousel
+                    // If the first product was just selected, update the layout
                     if (currentSlot == 1) {
                         $('#pc-sharp-carousel-wrapper').hide();
+                        $('#comparator-products').addClass('pc-selection-started');
                     }
                 }
             }
@@ -237,6 +238,7 @@ jQuery(document).ready(function($) {
         // Special handling for slot 1 removal
         if (slotToRemove == 1) {
             $('#pc-sharp-carousel-wrapper').show(); // Show the carousel again
+            $('#comparator-products').removeClass('pc-selection-started');
             for (let i = 2; i <= 3; i++) {
                  $(`#product-slot-${i}`).hide();
             }

@@ -26,13 +26,107 @@
     font-weight: 600;
 }
 
-/* --- PRODUCT SLOTS --- */
+/* --- PRODUCT SLOTS & INITIAL LAYOUT --- */
 #comparator-products {
+    margin-bottom: 30px;
+}
+
+/* Make the initial step container a flexbox */
+#pc-initial-step {
     display: flex;
     gap: 25px;
-    margin-bottom: 30px;
+    align-items: stretch;
+    justify-content: center; /* Center the two items */
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+#pc-initial-step #product-slot-1 {
+    flex: 0 1 320px; /* Basis of 320px */
+}
+
+#pc-initial-step #pc-instructions-block {
+    display: block;
+    flex: 1 1 450px; /* Basis of 450px */
+    min-width: 300px;
+}
+
+/* After selection, change the main container to a flexbox */
+#comparator-products.pc-selection-started {
+    display: flex;
     flex-wrap: wrap;
+    gap: 25px;
     justify-content: center;
+}
+
+/* Use display: contents to make the initial step container "disappear" */
+#comparator-products.pc-selection-started #pc-initial-step {
+    display: contents;
+}
+
+#comparator-products.pc-selection-started #pc-instructions-block {
+    display: none;
+}
+
+
+/* Instructions Block Styles */
+#pc-instructions-block {
+    display: none; /* Hidden by default, shown by the rule above */
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    padding: 30px 35px;
+    border: 1px solid var(--border-color);
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.pc-instructions h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: var(--dark-gray);
+}
+
+.pc-instructions ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pc-instructions li {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.pc-instructions .pc-step-number {
+    flex-shrink: 0;
+    background-color: var(--sharp-red);
+    color: var(--white);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.pc-instructions p {
+    margin: 0;
+    padding-top: 2px; /* Align text better with the number */
+    line-height: 1.6;
+    color: var(--mid-gray);
+}
+
+.pc-instructions p strong {
+    color: var(--dark-gray);
+    font-weight: 600;
 }
 
 .pc-product-slot {
