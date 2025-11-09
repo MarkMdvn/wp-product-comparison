@@ -181,8 +181,22 @@ function product_comparator_shortcode() {
         ],
     ]);
 
-    // Fetch product categories for the filter pills
-    $product_categories = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => true]);
+    // Get all category IDs from the Sharp products
+    $sharp_category_ids = [];
+    foreach ($sharp_products as $product) {
+        $sharp_category_ids = array_merge($sharp_category_ids, $product->get_category_ids());
+    }
+    $sharp_category_ids = array_unique($sharp_category_ids);
+
+    // Fetch only the product categories that contain Sharp products
+    $product_categories = [];
+    if (!empty($sharp_category_ids)) {
+        $product_categories = get_terms([
+            'taxonomy' => 'product_cat',
+            'include'  => $sharp_category_ids,
+            'hide_empty' => false, // We already know they're not empty of Sharp products
+        ]);
+    }
 
     ob_start();
     ?>
