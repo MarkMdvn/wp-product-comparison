@@ -1,36 +1,37 @@
 <?php
+
 /**
  * Plugin Name:       Product Comparator
  * Description:       A simple product comparator plugin for WooCommerce.
- * Version:           1.0.0
- * Author:            Gemini
- * Author URI:        https://gemini.google.com/
+ * Version:           2.1.0
+ * Author:            Mark Mordvin
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       product-comparator
  * Domain Path:       /languages
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
 /**
  * Enqueue scripts and styles.
  */
-function product_comparator_enqueue_assets() {
+function product_comparator_enqueue_assets()
+{
     // Make sure to enqueue only on pages where the shortcode is present
-    if ( is_singular() && has_shortcode( get_post()->post_content, 'product_comparator' ) ) {
+    if (is_singular() && has_shortcode(get_post()->post_content, 'product_comparator')) {
         wp_enqueue_style(
             'product-comparator-style',
-            plugin_dir_url( __FILE__ ) . 'assets/css/style.css',
+            plugin_dir_url(__FILE__) . 'assets/css/style.css',
             [],
             '1.0.0'
         );
 
         wp_enqueue_script(
             'product-comparator-script',
-            plugin_dir_url( __FILE__ ) . 'assets/js/main.js',
+            plugin_dir_url(__FILE__) . 'assets/js/main.js',
             ['jquery'], // Add jquery as a dependency
             '1.0.0',
             true
@@ -41,133 +42,138 @@ function product_comparator_enqueue_assets() {
             'product-comparator-script',
             'comparator_ajax_object',
             [
-                'ajax_url' => admin_url( 'admin-ajax.php' ),
+                'ajax_url' => admin_url('admin-ajax.php'),
             ]
         );
     }
 }
-add_action( 'wp_enqueue_scripts', 'product_comparator_enqueue_assets' );
+add_action('wp_enqueue_scripts', 'product_comparator_enqueue_assets');
 
 /**
  * AJAX handler for getting product categories.
  */
-function get_product_categories_ajax_handler() {
-    $categories = get_terms( ['taxonomy' => 'product_cat', 'hide_empty' => false] );
+function get_product_categories_ajax_handler()
+{
+    $categories = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => false]);
 
-    if ( is_wp_error( $categories ) ) {
-        error_log( 'WordPress Error fetching categories: ' . $categories->get_error_message() );
-        wp_send_json_error( 'WordPress Error: ' . $categories->get_error_message() );
-    } elseif ( empty( $categories ) ) {
-        error_log( 'No product categories found.' );
-        wp_send_json_error( 'No product categories found.' );
+    if (is_wp_error($categories)) {
+        error_log('WordPress Error fetching categories: ' . $categories->get_error_message());
+        wp_send_json_error('WordPress Error: ' . $categories->get_error_message());
+    } elseif (empty($categories)) {
+        error_log('No product categories found.');
+        wp_send_json_error('No product categories found.');
     } else {
-        wp_send_json_success( $categories );
+        wp_send_json_success($categories);
     }
 }
-add_action( 'wp_ajax_get_product_categories', 'get_product_categories_ajax_handler' );
-add_action( 'wp_ajax_nopriv_get_product_categories', 'get_product_categories_ajax_handler' );
+add_action('wp_ajax_get_product_categories', 'get_product_categories_ajax_handler');
+add_action('wp_ajax_nopriv_get_product_categories', 'get_product_categories_ajax_handler');
 
 /**
  * AJAX handler for getting product brands.
  */
-function get_product_brands_ajax_handler() {
-    $brands = get_terms( ['taxonomy' => 'product_brand', 'hide_empty' => false] );
+function get_product_brands_ajax_handler()
+{
+    $brands = get_terms(['taxonomy' => 'product_brand', 'hide_empty' => false]);
 
-    if ( is_wp_error( $brands ) ) {
-        wp_send_json_error( 'WordPress Error: ' . $brands->get_error_message() );
+    if (is_wp_error($brands)) {
+        wp_send_json_error('WordPress Error: ' . $brands->get_error_message());
     } else {
-        wp_send_json_success( $brands );
+        wp_send_json_success($brands);
     }
 }
-add_action( 'wp_ajax_get_product_brands', 'get_product_brands_ajax_handler' );
-add_action( 'wp_ajax_nopriv_get_product_brands', 'get_product_brands_ajax_handler' );
+add_action('wp_ajax_get_product_brands', 'get_product_brands_ajax_handler');
+add_action('wp_ajax_nopriv_get_product_brands', 'get_product_brands_ajax_handler');
 
 /**
  * AJAX handler for getting products.
  */
-function get_products_ajax_handler() {
+function get_products_ajax_handler()
+{
     $args = [
         'status' => 'publish',
         'limit' => -1, // Get all products
     ];
 
     // Search
-    if ( ! empty( $_POST['search'] ) ) {
-        $args['s'] = sanitize_text_field( $_POST['search'] );
+    if (! empty($_POST['search'])) {
+        $args['s'] = sanitize_text_field($_POST['search']);
     }
 
     // Category
-    if ( ! empty( $_POST['category'] ) ) {
-        $args['category'] = [ sanitize_text_field( $_POST['category'] ) ];
+    if (! empty($_POST['category'])) {
+        $args['category'] = [sanitize_text_field($_POST['category'])];
     }
 
     // Brand
-    if ( ! empty( $_POST['brand'] ) ) {
+    if (! empty($_POST['brand'])) {
         $args['tax_query'][] = [
             'taxonomy' => 'product_brand',
             'field'    => 'slug',
-            'terms'    => sanitize_text_field( $_POST['brand'] ),
+            'terms'    => sanitize_text_field($_POST['brand']),
         ];
     }
 
-    $products = wc_get_products( $args );
+    $products = wc_get_products($args);
     $product_data = [];
 
-    foreach ( $products as $product ) {
+    foreach ($products as $product) {
         $product_data[] = [
             'id'    => $product->get_id(),
             'name'  => $product->get_name(),
-            'image' => wp_get_attachment_url( $product->get_image_id() ),
+            'image' => wp_get_attachment_url($product->get_image_id()),
         ];
     }
 
-    wp_send_json_success( $product_data );
+    wp_send_json_success($product_data);
 }
-add_action( 'wp_ajax_get_products', 'get_products_ajax_handler' );
-add_action( 'wp_ajax_nopriv_get_products', 'get_products_ajax_handler' );
+add_action('wp_ajax_get_products', 'get_products_ajax_handler');
+add_action('wp_ajax_nopriv_get_products', 'get_products_ajax_handler');
 
 /**
  * AJAX handler for getting single product details.
  */
-function get_product_details_ajax_handler() {
-    if ( ! isset( $_POST['product_id'] ) ) {
-        wp_send_json_error( 'No product ID specified.' );
+function get_product_details_ajax_handler()
+{
+    if (! isset($_POST['product_id'])) {
+        wp_send_json_error('No product ID specified.');
     }
 
-    $product_id = intval( $_POST['product_id'] );
-    $product = wc_get_product( $product_id );
+    $product_id = intval($_POST['product_id']);
+    $product = wc_get_product($product_id);
 
-    if ( ! $product ) {
-        wp_send_json_error( 'Product not found.' );
+    if (! $product) {
+        wp_send_json_error('Product not found.');
     }
 
     $attributes = [];
-    foreach ( $product->get_attributes() as $attribute ) {
+    foreach ($product->get_attributes() as $attribute) {
         $attributes[] = [
-            'name'  => wc_attribute_label( $attribute->get_name() ),
-            'value' => $product->get_attribute( $attribute->get_name() ),
+            'name'  => wc_attribute_label($attribute->get_name()),
+            'value' => $product->get_attribute($attribute->get_name()),
         ];
     }
 
     $product_data = [
         'id'         => $product->get_id(),
         'name'       => $product->get_name(),
-        'image'      => wp_get_attachment_url( $product->get_image_id() ),
+        'image'      => wp_get_attachment_url($product->get_image_id()),
         'price'      => $product->get_price_html(),
         'attributes' => $attributes,
         'permalink'  => $product->get_permalink(),
-        'description'=> $product->get_description(),
+        'description' => $product->get_description(),
     ];
 
-    wp_send_json_success( $product_data );
+    wp_send_json_success($product_data);
 }
-add_action( 'wp_ajax_get_product_details', 'get_product_details_ajax_handler' );
-add_action( 'wp_ajax_nopriv_get_product_details', 'get_product_details_ajax_handler' );
+add_action('wp_ajax_get_product_details', 'get_product_details_ajax_handler');
+add_action('wp_ajax_nopriv_get_product_details', 'get_product_details_ajax_handler');
 
 /**
  * Shortcode handler
  */
-function product_comparator_shortcode() {
+function product_comparator_shortcode()
+{
     // Fetch Sharp products for the initial carousel
     $sharp_products = wc_get_products([
         'status' => 'publish',
@@ -199,7 +205,7 @@ function product_comparator_shortcode() {
     }
 
     ob_start();
-    ?>
+?>
     <div class="pc-product-comparator-container">
         <div class="pc-comparator-header">
             <h2>Comparador de Productos</h2>
@@ -239,7 +245,7 @@ function product_comparator_shortcode() {
 
             <!-- Slot 2 for Any Product -->
             <div id="product-slot-2" class="pc-product-slot" style="display: none;">
-                 <div class="pc-product-content">
+                <div class="pc-product-content">
                     <p>Elige otro producto</p>
                     <button class="pc-add-product-btn" data-slot="2">Añadir producto</button>
                 </div>
@@ -247,7 +253,7 @@ function product_comparator_shortcode() {
 
             <!-- Slot 3 for Any Product -->
             <div id="product-slot-3" class="pc-product-slot" style="display: none;">
-                 <div class="pc-product-content">
+                <div class="pc-product-content">
                     <p>Elige otro producto</p>
                     <button class="pc-add-product-btn" data-slot="3">Añadir producto</button>
                 </div>
@@ -269,20 +275,24 @@ function product_comparator_shortcode() {
             </div>
 
             <div id="pc-sharp-carousel" style="display: none;">
-                <?php foreach ( $sharp_products as $product ) : ?>
+                <?php foreach ($sharp_products as $product) : ?>
                     <?php
-                        $category_slugs = wp_get_post_terms($product->get_id(), 'product_cat', ['fields' => 'slugs']);
-                        $categories_string = implode(' ', $category_slugs);
+                    $category_slugs = wp_get_post_terms($product->get_id(), 'product_cat', ['fields' => 'slugs']);
+                    $categories_string = implode(' ', $category_slugs);
                     ?>
                     <div class="pc-carousel-item" data-categories="<?php echo esc_attr($categories_string); ?>">
-                        <img src="<?php echo wp_get_attachment_url( $product->get_image_id() ); ?>" alt="<?php echo $product->get_name(); ?>">
+                        <img src="<?php echo wp_get_attachment_url($product->get_image_id()); ?>" alt="<?php echo $product->get_name(); ?>">
                         <h4><?php echo $product->get_name(); ?></h4>
                         <div class="pc-comparar-btn" data-id="<?php echo $product->get_id(); ?>">+</div>
                     </div>
                 <?php endforeach; ?>
             </div>
-            <button class="pc-carousel-nav pc-carousel-prev" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
-            <button class="pc-carousel-nav pc-carousel-next" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+            <button class="pc-carousel-nav pc-carousel-prev" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg></button>
+            <button class="pc-carousel-nav pc-carousel-next" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg></button>
         </div>
 
         <div id="comparison-table" style="display: none;">
@@ -326,7 +336,7 @@ function product_comparator_shortcode() {
             </div>
         </div>
     </div>
-    <?php
+<?php
     return ob_get_clean();
 }
-add_shortcode( 'product_comparator', 'product_comparator_shortcode' );
+add_shortcode('product_comparator', 'product_comparator_shortcode');
