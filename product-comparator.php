@@ -258,7 +258,6 @@ function product_comparator_shortcode()
             <div id="product-slot-2" class="pc-product-slot" style="display: none;">
                 <div class="pc-product-content">
                     <p>Elige otro producto</p>
-                    <button class="pc-add-product-btn" data-slot="2">Añadir producto</button>
                 </div>
             </div>
 
@@ -266,7 +265,6 @@ function product_comparator_shortcode()
             <div id="product-slot-3" class="pc-product-slot" style="display: none;">
                 <div class="pc-product-content">
                     <p>Elige otro producto</p>
-                    <button class="pc-add-product-btn" data-slot="3">Añadir producto</button>
                 </div>
             </div>
         </div>
@@ -340,7 +338,7 @@ function product_comparator_shortcode()
             <!-- Step 2: Product Selection (Initially Hidden) -->
             <div id="modal-product-selection-view" style="display: none;">
                 <div class="pc-modal-header">
-                    <button id="pc-modal-back-btn" class="pc-link-btn">&larr; Volver a categorías</button>
+                    <button id="pc-modal-back-btn" class="pc-secondary-btn">&larr; Volver a categorías</button>
                     <h3>Elige un producto</h3>
                 </div>
                 <div id="modal-filters">

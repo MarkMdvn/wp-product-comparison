@@ -342,20 +342,46 @@
     transition: all var(--transition-speed) ease;
 }
 
-.pc-view-product-btn:hover, .pc-know-more-btn:hover {
+
+
+
+.pc-view-product-btn:hover {
     background-color: #C00010;
     box-shadow: var(--shadow-hover);
+    color: var(--white);
+    text-decoration: none;
 }
 
 .pc-know-more-btn {
     background-color: transparent;
     border-color: var(--border-color);
     color: var(--dark-gray);
+    margin-top: 10px;
 }
 
 .pc-know-more-btn:hover {
     background-color: var(--light-gray);
     border-color: var(--mid-gray);
+    color: var(--dark-gray);
+}
+
+.pc-secondary-btn {
+    background: var(--light-gray);
+    border: 1px solid var(--border-color);
+    color: var(--dark-gray);
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 50px;
+    transition: all var(--transition-speed) ease;
+    text-decoration: none;
+}
+
+.pc-secondary-btn:hover {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    color: var(--dark-gray);
 }
 
 /* --- MODAL --- */
@@ -504,20 +530,22 @@
 }
 
 .pc-link-btn {
-    background: var(--light-gray);
-    border: 1px solid var(--border-color);
-    color: var(--dark-gray);
+    background: var(--sharp-red);
+    border: 1px solid transparent;
+    color: var(--white);
     font-weight: 600;
     cursor: pointer;
     font-size: 0.9rem;
     padding: 8px 16px;
     border-radius: 50px;
     transition: all var(--transition-speed) ease;
+    text-decoration: none;
 }
 
 .pc-link-btn:hover {
-    background: #e2e8f0;
-    border-color: #cbd5e1;
+    background: #C00010;
+    color: var(--white);
+    text-decoration: none;
 }
 
 /* --- MODAL: STEP 2 (PRODUCT SELECTION) --- */
