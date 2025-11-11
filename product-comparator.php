@@ -63,7 +63,19 @@ function get_product_categories_ajax_handler()
         error_log('No product categories found.');
         wp_send_json_error('No product categories found.');
     } else {
-        wp_send_json_success($categories);
+        $category_data = [];
+        foreach ($categories as $category) {
+            $thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
+            $image_url = $thumbnail_id ? wp_get_attachment_url($thumbnail_id) : ''; // Get URL or empty string
+
+            $category_data[] = [
+                'term_id' => $category->term_id,
+                'name'    => $category->name,
+                'slug'    => $category->slug,
+                'image'   => $image_url,
+            ];
+        }
+        wp_send_json_success($category_data);
     }
 }
 add_action('wp_ajax_get_product_categories', 'get_product_categories_ajax_handler');

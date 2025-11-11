@@ -207,9 +207,12 @@ jQuery(document).ready(function($) {
             return;
         }
         categories.forEach(cat => {
+            // Use a placeholder if the image is missing
+            const imageUrl = cat.image || 'https://via.placeholder.com/150'; 
             const categoryEl = `
                 <div class="pc-modal-category-item" data-slug="${cat.slug}">
-                    ${cat.name}
+                    <img src="${imageUrl}" alt="${cat.name}" class="pc-modal-category-image">
+                    <span class="pc-modal-category-name">${cat.name}</span>
                 </div>
             `;
             categoryList.append(categoryEl);
