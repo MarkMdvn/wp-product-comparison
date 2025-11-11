@@ -313,16 +313,34 @@ function product_comparator_shortcode()
     <div id="product-comparator-modal" class="pc-comparator-modal">
         <div class="pc-comparator-modal-content">
             <span class="pc-comparator-modal-close">&times;</span>
-            <h3>Elige un producto</h3>
-            <div id="modal-filters">
-                <input type="text" id="modal-search-input" placeholder="Buscar productos...">
-                <div id="modal-selectors">
-                    <select id="modal-category-selector"></select>
-                    <select id="modal-brand-selector"></select>
+
+            <!-- Step 1: Category Selection -->
+            <div id="modal-category-selection-view">
+                <h3>Elige una categoría</h3>
+                <div id="modal-category-list">
+                    <!-- Category items will be loaded here via AJAX -->
+                </div>
+                <div class="pc-modal-footer-actions">
+                    <button id="pc-see-all-products-btn" class="pc-link-btn">Ver todos los productos &rarr;</button>
                 </div>
             </div>
-            <div id="modal-product-list">
-                <!-- Products will be loaded here via AJAX -->
+
+            <!-- Step 2: Product Selection (Initially Hidden) -->
+            <div id="modal-product-selection-view" style="display: none;">
+                <div class="pc-modal-header">
+                    <button id="pc-modal-back-btn" class="pc-link-btn">&larr; Volver a categorías</button>
+                    <h3>Elige un producto</h3>
+                </div>
+                <div id="modal-filters">
+                    <input type="text" id="modal-search-input" placeholder="Buscar productos...">
+                    <div id="modal-selectors">
+                        <select id="modal-category-selector"></select>
+                        <select id="modal-brand-selector"></select>
+                    </div>
+                </div>
+                <div id="modal-product-list">
+                    <!-- Products will be loaded here via AJAX -->
+                </div>
             </div>
         </div>
     </div>

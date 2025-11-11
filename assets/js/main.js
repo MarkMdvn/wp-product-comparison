@@ -11,6 +11,9 @@ jQuery(document).ready(function($) {
 
     // --- DOM ELEMENTS ---
     const modal = $('#product-comparator-modal');
+    const categorySelectionView = $('#modal-category-selection-view');
+    const productSelectionView = $('#modal-product-selection-view');
+    const categoryList = $('#modal-category-list');
     const descriptionModal = $('#product-description-modal');
     const productList = $('#modal-product-list');
     const categorySelector = $('#modal-category-selector');
@@ -20,17 +23,57 @@ jQuery(document).ready(function($) {
 
     // --- MODAL & DATA FETCHING ---
 
+    function showCategoryView() {
+        productSelectionView.hide();
+        categorySelectionView.show();
+        fetchCategories();
+    }
+
+    function showProductView(categorySlug = '') {
+        categorySelectionView.hide();
+        productSelectionView.show();
+        
+        // Fetch brands for the dropdown
+        fetchBrands(); 
+        
+        // Fetch products, optionally filtered by the chosen category
+        fetchProducts(categorySlug);
+
+        // Pre-select the category in the dropdown if one was chosen
+        // We need to fetch categories again for the dropdown
+        $.ajax({
+            url: comparator_ajax_object.ajax_url,
+            type: 'POST',
+            data: { action: 'get_product_categories' },
+            success: function(response) {
+                if (response.success) {
+                    // Render categories in the dropdown
+                    categorySelector.empty().append('<option value="">Todas las categorías</option>');
+                    response.data.forEach(cat => {
+                        categorySelector.append(`<option value="${cat.slug}">${cat.name}</option>`);
+                    });
+                    // Set the value
+                    if (categorySlug) {
+                        categorySelector.val(categorySlug);
+                    }
+                }
+            }
+        });
+    }
+
     function openModal(slot) {
         currentSlot = slot;
         modal.show();
-        fetchCategories();
-        fetchBrands();
-        fetchProducts();
+        showCategoryView();
     }
 
     function closeModal() {
         modal.hide();
+        // Reset views and clear content
+        productSelectionView.hide();
+        categorySelectionView.show();
         productList.empty();
+        categoryList.empty();
         categorySelector.empty();
         brandSelector.empty();
         searchInput.val('');
@@ -53,13 +96,15 @@ jQuery(document).ready(function($) {
             data: { action: 'get_product_categories' },
             success: function(response) {
                 if (response.success) {
-                    renderCategories(response.data);
+                    renderCategorySelection(response.data);
                 } else {
                     console.error('Error fetching categories:', response.data);
+                    categoryList.html('<p>Error al cargar categorías.</p>');
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error('AJAX error fetching categories:', textStatus, errorThrown);
+                categoryList.html('<p>Error al cargar categorías.</p>');
             }
         });
     }
@@ -155,10 +200,19 @@ jQuery(document).ready(function($) {
 
     // --- RENDERING ---
 
-    function renderCategories(categories) {
-        categorySelector.empty().append('<option value="">Todas las categorías</option>');
+    function renderCategorySelection(categories) {
+        categoryList.empty();
+        if (categories.length === 0) {
+            categoryList.html('<p>No se encontraron categorías.</p>');
+            return;
+        }
         categories.forEach(cat => {
-            categorySelector.append(`<option value="${cat.slug}">${cat.name}</option>`);
+            const categoryEl = `
+                <div class="pc-modal-category-item" data-slug="${cat.slug}">
+                    ${cat.name}
+                </div>
+            `;
+            categoryList.append(categoryEl);
         });
     }
 
@@ -391,12 +445,26 @@ jQuery(document).ready(function($) {
         }
     });
 
+    // Main modal listeners
     $('.pc-comparator-modal-close').on('click', closeModal);
     $(window).on('click', function(event) {
         if ($(event.target).is(modal)) {
             closeModal();
         }
     });
+
+    // Step 1: Category selection listeners
+    $('#modal-category-list').on('click', '.pc-modal-category-item', function() {
+        const categorySlug = $(this).data('slug');
+        showProductView(categorySlug);
+    });
+
+    $('#pc-see-all-products-btn').on('click', function() {
+        showProductView(); // Call without a category slug
+    });
+
+    // Step 2: Product selection listeners
+    $('#pc-modal-back-btn').on('click', showCategoryView);
 
     searchInput.on('keyup', function() {
         const search = $(this).val();
