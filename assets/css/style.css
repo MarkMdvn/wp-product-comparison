@@ -165,7 +165,6 @@
 .pc-product-slot:not(.pc-filled):hover {
     border-color: var(--sharp-red);
     box-shadow: var(--shadow-hover);
-    transform: translateY(-5px);
 }
 
 .pc-product-slot .pc-product-content {
@@ -196,7 +195,6 @@
 }
 
 .pc-product-slot:not(.pc-filled):hover .pc-product-content::before {
-    transform: scale(1.1);
     background-color: #C00010;
 }
 
@@ -264,7 +262,6 @@
 .pc-remove-product-btn:hover {
     background: var(--sharp-red);
     color: var(--white);
-    transform: scale(1.1);
 }
 
 /* --- COMPARISON TABLE --- */
@@ -347,7 +344,6 @@
 
 .pc-view-product-btn:hover, .pc-know-more-btn:hover {
     background-color: #C00010;
-    transform: translateY(-2px);
     box-shadow: var(--shadow-hover);
 }
 
@@ -430,8 +426,8 @@
 }
 
 .pc-modal-product-item {
-    border: 2px solid var(--border-color) !important;
-    border-radius: var(--border-radius) !important;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
     padding: 15px;
     text-align: center;
     cursor: pointer;
@@ -441,7 +437,6 @@
 
 .pc-modal-product-item:hover {
     box-shadow: var(--shadow-hover);
-    transform: translateY(-5px);
     border-color: var(--sharp-red);
 }
 
@@ -469,8 +464,8 @@
 }
 
 .pc-modal-category-item {
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
     padding: 20px;
     text-align: center;
     cursor: pointer;
@@ -496,7 +491,6 @@
 }
 
 .pc-modal-category-item:hover {
-    transform: translateY(-5px);
     box-shadow: var(--shadow-hover);
     border-color: var(--sharp-red);
     color: var(--sharp-red);
@@ -612,7 +606,6 @@
 
 .pc-carousel-item:hover {
     box-shadow: var(--shadow-hover);
-    transform: translateY(-5px);
 }
 
 .pc-carousel-item img {
@@ -644,7 +637,6 @@
 
 .pc-comparar-btn:hover {
     background-color: #C00010;
-    transform: scale(1.1);
 }
 
 .pc-carousel-nav {
