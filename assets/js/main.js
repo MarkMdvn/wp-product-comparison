@@ -63,12 +63,12 @@ jQuery(document).ready(function($) {
 
     function openModal(slot) {
         currentSlot = slot;
-        modal.css('display', 'flex');
+        modal.addClass('pc-modal-visible');
         showCategoryView();
     }
 
     function closeModal() {
-        modal.css('display', 'none');
+        modal.removeClass('pc-modal-visible');
         // Reset views and clear content
         productSelectionView.hide();
         categorySelectionView.show();
@@ -82,11 +82,11 @@ jQuery(document).ready(function($) {
     function openDescriptionModal(description) {
         const modalContent = descriptionModal.find('#modal-product-description');
         modalContent.html(description);
-        descriptionModal.css('display', 'flex');
+        descriptionModal.addClass('pc-modal-visible');
     }
 
     function closeDescriptionModal() {
-        descriptionModal.css('display', 'none');
+        descriptionModal.removeClass('pc-modal-visible');
     }
 
     function fetchCategories() {

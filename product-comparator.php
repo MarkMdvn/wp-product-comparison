@@ -240,7 +240,7 @@ function product_comparator_shortcode()
                     <ul>
                         <li>
                             <span class="pc-step-number">1</span>
-                            <p><strong>Elige un producto.</strong> Haz clic en "Añadir producto" para abrir el selector y encontrar un equipo Sharp.</p>
+                            <p><strong>Elige un producto.</strong> Haz clic en "Añadir producto" para abrir el selector y encontrar un equipo</p>
                         </li>
                         <li>
                             <span class="pc-step-number">2</span>
