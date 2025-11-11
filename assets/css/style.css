@@ -337,7 +337,7 @@
     color: var(--white);
     font-weight: 600;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 50px;
     border: 1px solid transparent;
     transition: all var(--transition-speed) ease;
 }
@@ -370,11 +370,13 @@
     overflow: auto; 
     background-color: rgba(0,0,0,0.6);
     backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
 }
 
 .pc-comparator-modal-content {
     background-color: var(--white);
-    margin: 5% auto; 
+    margin: auto; 
     padding: 30px;
     border: 1px solid var(--border-color) !important;
     border-radius: 16px !important;
@@ -502,17 +504,20 @@
 }
 
 .pc-link-btn {
-    background: none;
-    border: none;
-    color: var(--sharp-red);
+    background: var(--light-gray);
+    border: 1px solid var(--border-color);
+    color: var(--dark-gray);
     font-weight: 600;
     cursor: pointer;
-    font-size: 1rem;
-    padding: 5px;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 50px;
+    transition: all var(--transition-speed) ease;
 }
 
 .pc-link-btn:hover {
-    text-decoration: underline;
+    background: #e2e8f0;
+    border-color: #cbd5e1;
 }
 
 /* --- MODAL: STEP 2 (PRODUCT SELECTION) --- */

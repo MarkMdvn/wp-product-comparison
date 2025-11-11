@@ -63,12 +63,12 @@ jQuery(document).ready(function($) {
 
     function openModal(slot) {
         currentSlot = slot;
-        modal.show();
+        modal.css('display', 'flex');
         showCategoryView();
     }
 
     function closeModal() {
-        modal.hide();
+        modal.css('display', 'none');
         // Reset views and clear content
         productSelectionView.hide();
         categorySelectionView.show();
@@ -82,11 +82,11 @@ jQuery(document).ready(function($) {
     function openDescriptionModal(description) {
         const modalContent = descriptionModal.find('#modal-product-description');
         modalContent.html(description);
-        descriptionModal.show();
+        descriptionModal.css('display', 'flex');
     }
 
     function closeDescriptionModal() {
-        descriptionModal.hide();
+        descriptionModal.css('display', 'none');
     }
 
     function fetchCategories() {
