@@ -212,11 +212,10 @@ jQuery(document).ready(function($) {
 
     function unrenderSelectedProduct(slot) {
         const slotEl = $(`#product-slot-${slot}`);
-        const slotLabel = slot == 1 ? 'un producto Sharp' : 'otro producto';
+        const slotLabel = slot == 1 ? 'Elige un producto' : 'Elige otro producto';
         const originalHtml = `
             <div class="pc-product-content">
-                <p>Elige ${slotLabel}</p>
-                <button class="pc-add-product-btn">Añadir producto</button>
+                <p>${slotLabel}</p>
             </div>
         `;
         slotEl.removeClass('pc-filled').html(originalHtml);
@@ -309,8 +308,8 @@ jQuery(document).ready(function($) {
 
     // --- EVENT LISTENERS ---
 
-    $('.pc-product-comparator-container').on('click', '.pc-add-product-btn', function() {
-        const slot = $(this).closest('.pc-product-slot').attr('id').split('-')[2];
+    $('.pc-product-comparator-container').on('click', '.pc-product-slot:not(.pc-filled)', function() {
+        const slot = $(this).attr('id').split('-')[2];
         openModal(slot);
     });
 

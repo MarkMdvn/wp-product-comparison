@@ -219,8 +219,7 @@ function product_comparator_shortcode()
                 <!-- Slot 1 for Sharp Product -->
                 <div id="product-slot-1" class="pc-product-slot">
                     <div class="pc-product-content">
-                        <p>Elige un producto Sharp</p>
-                        <button class="pc-add-product-btn" data-slot="1">Añadir producto</button>
+                        <p>Elige un producto</p>
                     </div>
                 </div>
 
