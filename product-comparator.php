@@ -199,22 +199,11 @@ function product_comparator_shortcode()
         ],
     ]);
 
-    // Get all category IDs from the Sharp products
-    $sharp_category_ids = [];
-    foreach ($sharp_products as $product) {
-        $sharp_category_ids = array_merge($sharp_category_ids, $product->get_category_ids());
-    }
-    $sharp_category_ids = array_unique($sharp_category_ids);
-
-    // Fetch only the product categories that contain Sharp products
-    $product_categories = [];
-    if (!empty($sharp_category_ids)) {
-        $product_categories = get_terms([
-            'taxonomy' => 'product_cat',
-            'include'  => $sharp_category_ids,
-            'hide_empty' => false, // We already know they're not empty of Sharp products
-        ]);
-    }
+    // Fetch all non-empty product categories
+    $product_categories = get_terms([
+        'taxonomy'   => 'product_cat',
+        'hide_empty' => true,
+    ]);
 
     ob_start();
 ?>
@@ -273,11 +262,23 @@ function product_comparator_shortcode()
         <div id="pc-sharp-carousel-wrapper">
             <!-- Category Pills -->
             <div class="pc-category-pills-container">
-                <button class="pc-category-pill" data-category-slug="all">Todos</button>
+                <button class="pc-category-pill" data-category-slug="all">
+                    <div class="pc-category-pill-image-placeholder"></div>
+                    <span class="pc-category-pill-text">Todos</span>
+                </button>
                 <?php if (!is_wp_error($product_categories) && !empty($product_categories)) : ?>
                     <?php foreach ($product_categories as $category) : ?>
+                        <?php
+                        $thumbnail_id = get_term_meta($category->term_id, 'thumbnail_id', true);
+                        $image_url = $thumbnail_id ? wp_get_attachment_url($thumbnail_id) : '';
+                        ?>
                         <button class="pc-category-pill" data-category-slug="<?php echo esc_attr($category->slug); ?>">
-                            <?php echo esc_html($category->name); ?>
+                            <?php if ($image_url) : ?>
+                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($category->name); ?>" class="pc-category-pill-image">
+                            <?php else: ?>
+                                <div class="pc-category-pill-image-placeholder"></div>
+                            <?php endif; ?>
+                            <span class="pc-category-pill-text"><?php echo esc_html($category->name); ?></span>
                         </button>
                     <?php endforeach; ?>
                 <?php endif; ?>

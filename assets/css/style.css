@@ -7,7 +7,7 @@
   --border-color: #ced4da;
   --white: #fff;
   --shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
-  --shadow-hover: 0 8px 25px rgba(230, 0, 18, 0.2);
+  --shadow-hover: 0 8px 25px rgba(230, 0, 19, 0.066);
   --border-radius: 12px;
   --transition-speed: 0.3s;
 }
@@ -86,7 +86,7 @@
   display: none; /* Hidden by default, shown by the rule above */
   border-radius: var(--border-radius) !important;
   padding: 30px 35px;
-  border: 1px solid var(--border-color);
+  border: 3px solid var(--border-color);
   height: 100%;
   box-sizing: border-box;
 }
@@ -142,7 +142,7 @@
 }
 
 .pc-product-slot {
-  border: 2px dashed var(--border-color);
+  border: 3px dashed var(--border-color);
   border-radius: 25px !important;
   padding: 20px;
   text-align: center;
@@ -204,7 +204,7 @@
 }
 
 .pc-product-slot.pc-filled {
-  border: 1px solid var(--border-color);
+  border: 3px solid var(--border-color);
   background-color: var(--white);
   box-shadow: var(--shadow);
 }
@@ -561,34 +561,92 @@
 
 /* --- CATEGORY PILLS --- */
 .pc-category-pills-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 140px; /* Width of each pill - increased by 20px */
+  gap: 15px;
+  overflow-x: auto;
+  padding: 10px 0;
   margin-bottom: 25px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optional: Style the scrollbar for a better look */
+.pc-category-pills-container::-webkit-scrollbar {
+  height: 8px;
+}
+.pc-category-pills-container::-webkit-scrollbar-track {
+  background: var(--light-gray);
+  border-radius: 4px;
+}
+.pc-category-pills-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+.pc-category-pills-container::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
 }
 
 .pc-category-pill {
   background-color: var(--white);
   border: 1px solid var(--border-color);
-  border-radius: 20px;
-  padding: 8px 18px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  border-radius: 16px;
+  padding: 15px;
   cursor: pointer;
   transition: all var(--transition-speed) ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Align content to top */
+  text-align: center;
+  height: 100%; /* Make pill fill the grid row height */
+  width: 140px; /* Increased width by 20px */
 }
 
 .pc-category-pill:hover {
-  background-color: var(--light-gray);
-  border-color: var(--mid-gray);
-  color: var(--dark-gray);
+  /* No transform to prevent movement */
+  box-shadow: var(--shadow-hover);
+  border-color: var(--sharp-red);
+  background-color: var(--white);
+}
+
+.pc-category-pill:hover .pc-category-pill-text {
+  color: var(--dark-gray); /* Explicitly set to default text color */
 }
 
 .pc-category-pill.active {
-  background-color: var(--sharp-red);
-  color: var(--white);
+  background-color: var(--white); /* Keep background white */
   border-color: var(--sharp-red);
+  box-shadow: 0 0 0 1px var(--sharp-red), var(--shadow-hover); /* Thicker border effect */
+}
+
+.pc-category-pill.active .pc-category-pill-text {
+  color: var(--sharp-red);
+  font-weight: 600;
+}
+
+.pc-category-pill-image,
+.pc-category-pill-image-placeholder {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.pc-category-pill-image-placeholder {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+.pc-category-pill-text {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--dark-gray);
+  width: 100%;
+  word-wrap: break-word;
+  white-space: normal;
+  margin-top: 12px; /* Add margin to separate from image */
 }
 
 /* --- CAROUSEL --- */
