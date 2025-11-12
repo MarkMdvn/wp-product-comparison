@@ -248,7 +248,7 @@ function product_comparator_shortcode()
                         </li>
                         <li>
                             <span class="pc-step-number">3</span>
-                            <p><strong>Decide.</strong> ¿Lo tienes claro? Pulsa en "Ver producto" para ir a su página y finalizar tu compra.</p>
+                            <p><strong>Decide.</strong> ¿Lo tienes claro? Pulsa en "Ver producto" para ir a su página.</p>
                         </li>
                     </ul>
                 </div>
